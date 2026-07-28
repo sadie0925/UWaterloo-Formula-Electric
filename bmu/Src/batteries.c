@@ -414,7 +414,7 @@ void imdTask(void *pvParamaters)
             if(imdData->faults & ISOLATION_FAULT || imdData->faults & ISOLATION_WARNING ) {
                 DEBUG_PRINT("IMD faulted!!\r\n");
                 fsmSendEventUrgentISR(&fsmHandle, EV_HV_Fault);
-                sendDTC_FATAL_IMD_Failure(1);
+                sendDTC_FATAL_IMD_Failure(imdData->faults);
                     TSSI_GREEN_OFF;
                     TSSI_RED_ON;
             }
@@ -597,7 +597,11 @@ bool boundedContinue()
 {
     if ((++errorCounter) > MAX_ERROR_COUNT) {
         ERROR_PRINT("Battery Error occured!\n");
-        sendDTC_FATAL_BMU_ERROR();
+        if (BatteryTaskFailure == CLOSE_TO_RED_FAIL_BIT) {
+            sendDTC_FATAL_BMU_Close_To_Edge();
+        } else {
+            sendDTC_FATAL_Battery_Task_Failure(BatteryTaskFailure);
+        }
         fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, portMAX_DELAY);
         return false;
     } else {
@@ -1396,6 +1400,7 @@ void batteryTask(void *pvParameter)
     {
         BatteryTaskFailure = BATTERY_START_FAIL_BIT;
         sendCAN_BMU_BatteryChecks();
+        sendDTC_FATAL_Battery_Task_Failure(BatteryTaskFailure);
         fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, pdMS_TO_TICKS(500));
         TickType_t xLastWakeTime = xTaskGetTickCount();
         while (1) {

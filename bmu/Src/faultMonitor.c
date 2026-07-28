@@ -13,6 +13,7 @@
 
 #include "FreeRTOS.h"
 #include "bmu_can.h"
+#include "bmu_dtc.h"
 #include "bsp.h"
 #include "controlStateMachine.h"
 #include "debug.h"
@@ -329,6 +330,7 @@ void faultMonitorTask(void *pvParameters) {
 
         if (getBOTS_Status() == false && sentEvent > BOTS_FAILED) {
             ERROR_PRINT("Fault Monitor: BOTS tripped!\n");
+            sendDTC_FATAL_BOTS_Failure();
             fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, portMAX_DELAY);
             sentEvent = BOTS_FAILED;
             continue;
@@ -336,6 +338,7 @@ void faultMonitorTask(void *pvParameters) {
 
         if (getEbox_Il_Status() == false && sentEvent > EBOX_FAILED) {
             ERROR_PRINT("Fault Monitor: EBOX connector disconnected!\n");
+            sendDTC_FATAL_EBOX_IL_Failure();
             fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, portMAX_DELAY);
             sentEvent = EBOX_FAILED;
             continue;
@@ -343,6 +346,7 @@ void faultMonitorTask(void *pvParameters) {
 
         if (getBSPD_Status() == false && sentEvent > BSPD_FAILED) {
             ERROR_PRINT("Fault Monitor: BSPD tripped!\n");
+            sendDTC_FATAL_BSPD_Failure();
             fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, portMAX_DELAY);
             sentEvent = BSPD_FAILED;
             continue;
@@ -350,6 +354,7 @@ void faultMonitorTask(void *pvParameters) {
 
         if (getHVD_Status() == false && sentEvent > HVD_FAILED) {
             ERROR_PRINT("Fault Monitor: HVD removed!\n");
+            sendDTC_FATAL_HVD_Failure();
             fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, portMAX_DELAY);
             sentEvent = HVD_FAILED;
             continue;
@@ -362,6 +367,7 @@ void faultMonitorTask(void *pvParameters) {
         if (!cbrb_ok && sentEvent > CBRB_FAILED) {
             if (!last_cbrb_ok) {
                 ERROR_PRINT("Fault Monitor: Cockpit BRB pressed!\n");
+                sendDTC_CRITICAL_CBRB_Pressed();
                 fsmSendEventUrgent(&fsmHandle, EV_Cockpit_BRB_Pressed, portMAX_DELAY);
                 sentEvent = CBRB_FAILED;
             }
@@ -376,6 +382,7 @@ void faultMonitorTask(void *pvParameters) {
 
         if (getTSMS_Status() == false && sentEvent > TSMS_FAILED) {
             ERROR_PRINT("Fault Monitor: TSMS removed!\n");
+            sendDTC_FATAL_TSMS_Failure();
             fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, portMAX_DELAY);
             sentEvent = TSMS_FAILED;
             continue;
@@ -383,6 +390,7 @@ void faultMonitorTask(void *pvParameters) {
 
         if (getHwCheck_Status() == false && sentEvent > HW_CHECK_FAILED) {
             ERROR_PRINT("Fault Monitor: HW check failed!\n");
+            sendDTC_FATAL_HW_CHECK_Failure();
             fsmSendEventUrgent(&fsmHandle, EV_HV_Fault, portMAX_DELAY);
             sentEvent = HW_CHECK_FAILED;
             continue;

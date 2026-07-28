@@ -291,8 +291,8 @@ void sendStopPrecharge()
 
 uint32_t handleFault(uint32_t event)
 {
-    sendDTC_FATAL_BMU_ERROR();
-    ERROR_PRINT("SM received fault\n");      //State machine received fault
+    sendDTC_FATAL_BMU_HV_Fault(event);
+    ERROR_PRINT("SM received fault event %lu\n", event);      //State machine received fault
 
     uint32_t currentState = fsmGetState(&fsmHandle);
 

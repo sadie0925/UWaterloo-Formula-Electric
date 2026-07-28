@@ -17,8 +17,11 @@
 #define PRODUCTION_ERROR_HANDLING
 #endif
 
-#define SEND_FATAL_DTC CAT(sendDTC_FATAL_, CAT(BOARD_NAME_UPPER, _ERROR))
-#define SEND_CRITICAL_DTC CAT(sendDTC_CRITICAL_, CAT(BOARD_NAME_UPPER, _ERROR))
+#if BOARD_IS_WSB(BOARD_ID)
+#define SEND_BOARD_ERROR_DTC(line) CAT(sendDTC_CRITICAL_, CAT(BOARD_NAME_UPPER, _ERROR))(line)
+#else
+#define SEND_BOARD_ERROR_DTC(line) CAT(sendDTC_FATAL_, CAT(BOARD_NAME_UPPER, _ERROR))(line)
+#endif
 #endif
 
 
@@ -81,7 +84,7 @@ void _handleError(char *file, int line)
 
   HAL_GPIO_WritePin(ERROR_LED_PORT, ERROR_LED_PIN, GPIO_PIN_SET);
 
-  SEND_FATAL_DTC();
+  SEND_BOARD_ERROR_DTC(line);
 
   if (resetUART() != HAL_OK) {
       // Can't really do anything else
@@ -109,10 +112,8 @@ void _handleError(char *file, int line)
 
 #if !BOARD_IS_WSB(BOARD_ID)
 	sendDTC_WARNING_ERROR_HANDLER(line);
-    SEND_FATAL_DTC();
-#else
-    SEND_CRITICAL_DTC();
 #endif
+    SEND_BOARD_ERROR_DTC(line);
     // Trigger whatever error handling this board has
     DTC_Fatal_Callback(BOARD_ID);
     errorOccured = true;

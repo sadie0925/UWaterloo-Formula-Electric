@@ -139,7 +139,7 @@ void lvMeasureTask(void *pvParameters)
 
         if (readCurrent(I_Main_Channel) >= LV_MAX_CURRENT_AMPS) {
             ERROR_PRINT("Error: LV bus current exceeded max value of 30A. Check Fuse!\n");
-            // TODO: Should we do anything?
+            sendDTC_ERROR_PDU_Max_Current_Exceeded();
         }
 
         /* Low battery warning. Period of 1 min. */

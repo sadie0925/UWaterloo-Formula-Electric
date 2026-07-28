@@ -20,11 +20,11 @@ DTC CODE,NAME,ORIGIN,SEVERITY,SUBSCRIBERS,DATA,MESSAGE
 19,BOARDS_OFF,PDU,1,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,"Critical failure occurred, PDU is turning off the boards"
 20,LV_CUTTOFF_BOARDS_OFF,PDU,1,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,"LV Cuttoff reached, PDU is turning off boards shortly"
 21,PDU_HV_Critical,PDU,1,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,HV Critical failure has been detected by the PDU
-22,PDU_ERROR, PDU,1,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,PDU: unknown error occured
-23,VCU_F7_ERROR,VCU_F7,1,"PDU, DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,VCU: unknown error occured
-24,BMU_ERROR,BMU,1,"PDU, DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,BMU: unknown error occured
-25,DCU_ERROR,DCU,1,"PDU, DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,DCU: unknown error occured
-26,VCU_BEAGLEBONE_ERROR,VCU_BEAGLEBONE,1,"PDU, DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,VCU-BB: unknown error occured
+22,PDU_ERROR,PDU,1,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU",Line,PDU: unknown error at line #data
+23,VCU_F7_ERROR,VCU_F7,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",Line,VCU: unknown error at line #data
+24,BMU_ERROR,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",Line,BMU: unknown error at line #data
+25,DCU_ERROR,DCU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",Line,DCU: unknown error at line #data
+26,VCU_BEAGLEBONE_ERROR,VCU_BEAGLEBONE,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",Line,VCU-BB: unknown error at line #data
 27,BPS_FAIL,VCU_F7,2,"PDU,BMU,VCU_BEAGLEBONE,DCU",NA,Bps sensor detected a failure
 28,Brake_Pressure_FAIL,VCU_F7,2,"PDU,BMU,VCU_BEAGLEBONE,DCU",NA,Brake pressure sensor detected a failure
 29,DCU_CAN_Timeout,VCU_F7,1,"PDU,BMU,VCU_BEAGLEBONE,DCU",NA,DCU CAN Timeout occured
@@ -41,11 +41,11 @@ DTC CODE,NAME,ORIGIN,SEVERITY,SUBSCRIBERS,DATA,MESSAGE
 40,BMU_Charger_ERROR,BMU,1,"DCU,PDU,VCU_F7,ChargeCart",NA,Charger reported an error while charging
 41,BMU_SystemNotReady,BMU,4,"DCU,PDU,VCU_F7,ChargeCart",Reason,"BMU waiting for system to come up, can't process request yet b/c: #data {1: ""IMD_FAIL"", 2: ""IL_HVIL_FAIL""}"
 42,PDU_EM_EN_BLOCKED_DCDC_OFF,PDU,4,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,PDU blocked EM enable request since DC-DC not on
-43,ChargeCart_ERROR,ChargeCart,1,BMU,NA,CC: unknown error occured
-44,WSBFL_ERROR,WSBFL,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",NA,WSBFL: unknown error occured
-45,WSBFR_ERROR,WSBFR,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",NA,WSBFR: unknown error occured
-46,WSBRL_ERROR,WSBRL,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",NA,WSBRL: unknown error occured
-47,WSBRR_ERROR,WSBRR,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",NA,WSBRR: unknown error occured
+43,ChargeCart_ERROR,ChargeCart,1,BMU,Line,CC: unknown error at line #data
+44,WSBFL_ERROR,WSBFL,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",Line,WSBFL: unknown error at line #data
+45,WSBFR_ERROR,WSBFR,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",Line,WSBFR: unknown error at line #data
+46,WSBRL_ERROR,WSBRL,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",Line,WSBRL: unknown error at line #data
+47,WSBRR_ERROR,WSBRR,2,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",Line,WSBRR: unknown error at line #data
 48,BMU_UNKOWN_EVENT_STATE_COMBO,BMU,4,"DCU,PDU,VCU_F7,ChargeCart",Event,BMU received event #data with no transition from current state
 49,BrakeWhileThrottleError_Disabled,VCU_F7,4,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",NA,"Max throttle while brake pressed reached, throttle disabled (EV.3.4 FSAE)"
 50,BrakeWhileThrottleError_Enabled,VCU_F7,4,"DCU,VCU_F7,VCU_BEAGLEBONE,BMU,PDU",NA,"Throt at rst point after BrakeWhileThrottle Error, Thrott Reengaged (EV.3.4 FSAE)"
@@ -69,4 +69,13 @@ DTC CODE,NAME,ORIGIN,SEVERITY,SUBSCRIBERS,DATA,MESSAGE
 68,PDU_Motor_Overheat,PDU,1,VCU_BEAGLEBONE,NA,"INV: Motor Temp > 100C"
 69,PDU_Max_Current_Exceeded,PDU,3,VCU_BEAGLEBONE,NA,"LV Current > 30A"
 70,AMS_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,"AMS failed"
-71, BMU_Close_To_Edge, BMU, 1, "PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,"BMU close to edge, going hv down"
+71,BMU_Close_To_Edge,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,BMU close to edge, going hv down
+72,BOTS_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,BOTS interlock tripped, HV shutdown
+73,EBOX_IL_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,EBOX interlock open, HV shutdown
+74,BSPD_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,BSPD interlock tripped, HV shutdown
+75,HVD_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,HVD interlock open, HV shutdown
+76,TSMS_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,TSMS interlock open, HV shutdown
+77,HW_CHECK_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,HW check interlock failed, HV shutdown
+78,CBRB_Pressed,BMU,2,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",NA,Cockpit BRB pressed
+79,Battery_Task_Failure,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",FailureBit,"Battery task failure bitfield #data {1: ""start"", 2: ""open_wire"", 4: ""read_cell"", 8: ""check_cell"", 16: ""pack_voltage"", 32: ""close_to_red""}"
+80,BMU_HV_Fault,BMU,1,"PDU,DCU,VCU_F7,VCU_BEAGLEBONE,BMU",Event,BMU state machine entered HV fault on event #data

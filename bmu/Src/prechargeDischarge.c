@@ -563,6 +563,7 @@ void pcdcTask(void *pvParameter)
                 fsmSendEvent(&fsmHandle, EV_Precharge_Finished, portMAX_DELAY);
             } else if (rc == PCDC_ERROR) {
                 DEBUG_PRINT("Precharge Error\n");
+                sendDTC_FATAL_PrechargeFailed(PrechargeState);
                 PrechargeState = 6;
                 sendCAN_PrechargeState();
 #ifdef ENABLE_PRECHARGE_DISCHARGE
@@ -586,6 +587,7 @@ void pcdcTask(void *pvParameter)
 
             if (rc != PCDC_DONE) {
                 ERROR_PRINT("Failed to discharge\n");
+                sendDTC_FATAL_DischargeFailed(DischargeState);
                 openAllContactors();
                 fsmSendEvent(&fsmHandle, EV_PrechargeDischarge_Fail, portMAX_DELAY);
             } else {
