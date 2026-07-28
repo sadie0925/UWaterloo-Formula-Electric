@@ -74,3 +74,50 @@ class DTCLogger:
     def reset_logger(self) -> None:
         # Clear all DTCs from the log
         self.dtc_log = {}
+
+    def expect_dtc(self, code: int, severity: int = None, data: int = None) -> bool:
+        """
+        Assert-style helper for HIL tests.
+
+        Returns True if an unread DTC matching code (and optional severity/data)
+        was found. Marks matching unread DTCs as read.
+        """
+        assert self.has_dtc(code), f"DTC Code {code} not found in DTC Log"
+
+        matches = []
+        for dtc in reversed(self.dtc_log[code]):
+            if dtc.was_read:
+                continue
+            if severity is not None and dtc.severity != severity:
+                continue
+            if data is not None and dtc.data != data:
+                continue
+            matches.append(dtc)
+
+        assert matches, (
+            f"No unread DTC match for code={code}, severity={severity}, data={data}. "
+            f"Logged={[(d.severity, d.data, d.was_read) for d in self.dtc_log.get(code, [])]}"
+        )
+
+        for dtc in matches:
+            dtc.read()
+        return True
+
+    def wait_for_dtc(self, code: int, timeout_s: float = 5.0, poll_s: float = 0.1,
+                     severity: int = None, data: int = None) -> bool:
+        """Poll until an unread matching DTC appears or timeout expires."""
+        import time
+
+        deadline = time.time() + timeout_s
+        while time.time() < deadline:
+            if self.has_dtc(code):
+                try:
+                    return self.expect_dtc(code, severity=severity, data=data)
+                except AssertionError:
+                    pass
+            time.sleep(poll_s)
+
+        raise AssertionError(
+            f"Timed out after {timeout_s}s waiting for DTC code={code} "
+            f"severity={severity} data={data}. Seen codes={self.list_dtcs()}"
+        )
